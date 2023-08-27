@@ -1,11 +1,43 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
+}
+
+model users {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  password String
+  links    links[]
+}
+
+model links {
+  id         String       @id @default(uuid())
+  title      String
+  long_url   String
+  short_url  String       @unique
+  password   String?
+  access     enumAccesses @default(PUBLIC)
+  expired_at DateTime?    @db.Timestamp(6)
+  owner_id   String
+  owner      users        @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  members    members[]
+
+  @@unique([id, short_url])
+}
+
+model members {
+  id      String @id @default(uuid())
+  email   String
+  link_id String
+  link    links  @relation(fields: [link_id], references: [id])
+}
+
+enum enumAccesses {
+  PUBLIC
+  INVITED
 }
