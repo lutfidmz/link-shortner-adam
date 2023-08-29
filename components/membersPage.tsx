@@ -13,114 +13,96 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 
-interface FormLinks {
-  id: any;
+const linkData = {
+  id: "1f2a3b4c-1111-2222-3333-abcdef123456",
+  title: "Example Link 1",
+  long_url: "https://www.example.com/long/url/1",
+  short_url: "https://short.link/abc123",
+  password: "securepass1",
+  access: "INVITED",
+  expired_at: null,
+  owner_id: "a1b2c3d4-5555-6666-7777-def456789012",
+};
+
+interface formLinks {
   title: any;
   long_url: any;
   short_url: any;
   password: any;
-  oldpassword: any;
-  newpassword: any;
-  access: any;
-  expired_at: any;
-}
-interface Links {
-  id: any;
-  title: any;
-  long_url: any;
-  short_url: any;
-  password: any;
   access: any;
   expired_at: any;
 }
 
-export default function linkDetails({ params }: { params: { id: any } }) {
-  const [linkData, setLinkData] = useState<Links>({
-    id: "",
-    title: "",
-    long_url: "",
-    short_url: "",
-    password: null,
-    access: "",
-    expired_at: null,
-  });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/api/link/${params.id}`);
-        const data = response.data.getLinks;
-        if (data) {
-          data.expired_at = data.expired_at ? new Date(data.expired_at) : null;
-          setLinkData(data);
-          setFormLinks(data);
-          setPrivateMode(data.access === "INVITED");
-        }
-      } catch (error) {
-        console.error("Error fetching link data:", error);
-      }
-    };
-
-    if (params.id) {
-      fetchData();
-    }
-  }, [params.id]);
-
+export default function linkDetails() {
   const [inputsDisabled, setInputsDisabled] = useState(true);
   const [buttonText, setButtonText] = useState("Change");
   const [privatemode, setPrivateMode] = useState(linkData.access === "INVITED");
-  const [formLinks, setFormLinks] = useState<FormLinks>({
-    id: "",
-    title: "",
-    long_url: "",
-    short_url: "",
+  const [formLinks, setFormLinks] = useState<formLinks>({
+    title: linkData.title,
+    long_url: linkData.long_url,
+    short_url: linkData.short_url,
     password: linkData.password,
-    oldpassword: null,
-    newpassword: null,
-    access: "",
-    expired_at: null,
+    access: linkData.access,
+    expired_at: linkData.expired_at,
   });
+  const [newPassword, setNewPassword] = useState({
+    password: linkData.password,
+  });
+  const [oldPassword, setOldPassword] = useState({ password: "" });
 
   const { toast } = useToast();
+  const router = useRouter();
 
-  const handleButtonClick = () => {
-    if (inputsDisabled) {
-      setInputsDisabled(false);
-      setButtonText("Confirm");
-    } else {
-      console.log("FormLinks:99", formLinks);
-
-      const updateData = async () => {
-        try {
-          const response = await axios.patch(`/api/link/${params.id}`, {
-            ...formLinks,
-          });
-
-          if (response.status === 200) {
-            toast({
-              title: "Changes Saved",
-              description: "Your link new data has been saved!",
-            });
-            setInputsDisabled(true);
-            setButtonText("Change");
-          }
-        } catch (error) {
-          toast({
-            title: "Changes Failed",
-            description:
-              "Please make sure the data you inputted is correct or the password is wrong!",
-          });
+  const handleButtonClick = async () => {
+    console.log("CL:62");
+    try {
+      await axios.post(
+        "/api/link",
+        // {
+        //   title: "Example Link 1",
+        //   long_url: "https://www.example.com/long/url/1",
+        //   short_url: "https://short.link/abc123",
+        //   password: "securepass1",
+        //   access: "INVITED",
+        //   expired_at: null,
+        //   owner_id: "75b55177-1e52-4cf9-89a8-9de0f6589880",
+        // }
+        {
+          title: "Example Link 2",
+          long_url: "https://www.example.com/long/url/2",
+          short_url: "https://short.link/def456",
+          password: "pass123",
+          access: "INVITED",
+          expired_at: "2023-12-31T23:59:59Z",
+          owner_id: "75b55177-1e52-4cf9-89a8-9de0f6589880",
         }
-      };
-
-      if (params.id) {
-        updateData();
-      }
+        // {
+        //   title: "Example Link 3",
+        //   long_url: "https://www.example.com/long/url/3",
+        //   short_url: "https://short.link/ghi789",
+        //   password: null,
+        //   access: "PUBLIC",
+        //   expired_at: "2023-09-15T12:00:00Z",
+        //   owner_id: "75b55177-1e52-4cf9-89a8-9de0f6589880",
+        // }
+        // {
+        //   title: "Example Link 4",
+        //   long_url: "https://www.example.com/long/url/4",
+        //   short_url: "https://short.link/jkl012",
+        //   password: null,
+        //   access: "PUBLIC",
+        //   expired_at: null,
+        //   owner_id: "75b55177-1e52-4cf9-89a8-9de0f6589880",
+        // }
+      );
+    } catch (error) {
+      console.error("Error creating category:", error);
     }
   };
 
@@ -216,26 +198,17 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                 <Input
                   type="date"
                   id="expired_at"
-                  defaultValue={
-                    linkData.expired_at
-                      ? linkData.expired_at.toISOString().substring(0, 10)
-                      : ""
-                  }
+                  defaultValue={linkData.expired_at || "Never"}
                   onChange={(e) =>
                     setFormLinks((prev) => {
-                      return {
-                        ...prev,
-                        expired_at: e.target.value
-                          ? new Date(e.target.value).toISOString()
-                          : null,
-                      };
+                      return { ...prev, expired_at: e.target.value };
                     })
                   }
                   disabled={inputsDisabled}
                 />
               </div>
 
-              <div className="hidden md:flex items-center justify-between space-x-2">
+              <div className="flex items-center justify-between space-x-2">
                 <Label htmlFor="private-mode">Only Invited</Label>
                 <Switch
                   id="private-mode"
@@ -253,26 +226,24 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                   id="current"
                   type="password"
                   onChange={(e) =>
-                    setFormLinks((prev) => {
-                      return { ...prev, oldpassword: e.target.value };
+                    setOldPassword((prev) => {
+                      return { ...prev, password: e.target.value };
                     })
                   }
-                  disabled={inputsDisabled}
+                  disabled={!(privatemode && !inputsDisabled)}
                 />
               </div>
               <div className="space-y-1 hidden md:block">
-                <Label htmlFor="new" className="flex">
-                  New password <p className="pl-2 text-gray-400">optional</p>
-                </Label>
+                <Label htmlFor="new">New password</Label>
                 <Input
                   id="new"
                   type="password"
                   onChange={(e) =>
-                    setFormLinks((prev) => {
-                      return { ...prev, newpassword: e.target.value };
+                    setNewPassword((prev) => {
+                      return { ...prev, password: e.target.value };
                     })
                   }
-                  disabled={inputsDisabled}
+                  disabled={!(privatemode && !inputsDisabled)}
                 />
               </div>
               <div className="space-y-1 hidden md:block">
@@ -310,11 +281,11 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                   id="current"
                   type="password"
                   onChange={(e) =>
-                    setFormLinks((prev) => {
-                      return { ...prev, oldpassword: e.target.value };
+                    setOldPassword((prev) => {
+                      return { ...prev, password: e.target.value };
                     })
                   }
-                  disabled={inputsDisabled}
+                  disabled={!(privatemode && !inputsDisabled)}
                 />
               </div>
               <div className="space-y-1">
@@ -323,17 +294,17 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                   id="new"
                   type="password"
                   onChange={(e) =>
-                    setFormLinks((prev) => {
-                      return { ...prev, newpassword: e.target.value };
+                    setNewPassword((prev) => {
+                      return { ...prev, password: e.target.value };
                     })
                   }
-                  disabled={inputsDisabled}
+                  disabled={!(privatemode && !inputsDisabled)}
                 />
               </div>
               <CardTitle>Members</CardTitle>
               <CardDescription>
                 You can add people to join as members here
-                <br />
+                <p></p>
                 <Link href={`/links/${linkData.id}/members`}>
                   <Button>Members</Button>
                 </Link>

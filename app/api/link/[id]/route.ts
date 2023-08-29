@@ -21,17 +21,51 @@ export async function PATCH(
     request: Request,
     { params }: { params: { id: string } }) {
     const id = params.id
-    const { title } = await request.json();
-    const updateLinks = await prisma.links.update({
-        where: {
-            id: id,
-        },
-        data: {
-            title: title,
-        },
-    })
+    const { title,
+        long_url,
+        short_url,
+        password,
+        oldpassword,
+        newpassword,
+        access,
+        expired_at,
+        owner_id, } = await request.json();
 
-    return NextResponse.json({ updateLinks }, { status: 200 });
+    // validasi untuk password
+    if (newpassword) {
+        if (oldpassword !== password)
+            return NextResponse.json({ message: "Password invalid" }, { status: 422 }) //422 unprocessed request
+        await prisma.links.update({
+            where: {
+                id: id,
+            },
+            data: {
+                title,
+                long_url,
+                short_url,
+                password: newpassword,
+                access,
+                expired_at,
+                owner_id,
+            },
+        })
+        return NextResponse.json({ status: 200 });
+    } else {
+        await prisma.links.update({
+            where: {
+                id: id,
+            },
+            data: {
+                title,
+                long_url,
+                short_url,
+                access,
+                expired_at,
+                owner_id,
+            },
+        })
+        return NextResponse.json({ status: 200 });
+    }
 }
 
 export async function DELETE(

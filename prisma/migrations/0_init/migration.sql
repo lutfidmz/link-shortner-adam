@@ -19,7 +19,6 @@ CREATE TABLE "links" (
     "short_url" STRING NOT NULL,
     "password" STRING,
     "access" "enumAccesses" NOT NULL DEFAULT 'PUBLIC',
-    "expired_at" TIMESTAMP(6),
     "owner_id" STRING NOT NULL,
 
     CONSTRAINT "links_pkey" PRIMARY KEY ("id")

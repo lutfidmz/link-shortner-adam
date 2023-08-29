@@ -22,7 +22,7 @@ model links {
   short_url  String       @unique
   password   String?
   access     enumAccesses @default(PUBLIC)
-  expired_at DateTime?    @db.Timestamp(6)
+  expired_at DateTime?    @db.Date
   owner_id   String
   owner      users        @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   members    members[]
