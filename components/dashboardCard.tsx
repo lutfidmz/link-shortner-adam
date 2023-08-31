@@ -63,10 +63,10 @@ export default function DashboardCard() {
     console.log("handleDelete", id);
     try {
       await axios.delete(`/api/link/${id}`);
-      router.replace("/dashboard");
     } catch (error) {
       console.error("Error deleting link data:", error);
     }
+    router.replace("/dashboard");
   };
 
   return linkData ? (

@@ -292,7 +292,7 @@ export default function LinkDetails({ params }: { params: { id: any } }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              <div className="flex items-center justify-between space-x-2">
+              {/* <div className="flex items-center justify-between space-x-2">
                 <Label htmlFor="private-mode">Only Invited</Label>
                 <Switch
                   id="private-mode"
@@ -303,7 +303,7 @@ export default function LinkDetails({ params }: { params: { id: any } }) {
                   }}
                   disabled={inputsDisabled}
                 />
-              </div>
+              </div> */}
               <div className="space-y-1">
                 <Label htmlFor="current">Current password</Label>
                 <Input
@@ -330,14 +330,14 @@ export default function LinkDetails({ params }: { params: { id: any } }) {
                   disabled={inputsDisabled}
                 />
               </div>
-              <CardTitle>Members</CardTitle>
+              {/* <CardTitle>Members</CardTitle>
               <CardDescription>
                 You can add people to join as members here
                 <br />
                 <Link href={`/links/${linkData.id}/members`}>
                   <Button>Members</Button>
                 </Link>
-              </CardDescription>
+              </CardDescription> */}
             </CardContent>
           </Card>
         </TabsContent>

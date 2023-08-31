@@ -58,7 +58,7 @@ export default function DashboardComponent() {
     try {
       const response = await axios.post(`/api/link`, {
         ...formData,
-        short_url: "http://localhost:3000/l/" + formData.short_url,
+        short_url: process.env.NEXT_BASE_URL + "/l/" + formData.short_url,
         // @ts-ignore FIXME
         owner_id: session?.user?.id,
       });
@@ -105,7 +105,7 @@ export default function DashboardComponent() {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>{`http://www.linkshortner.com/l/${randomString}`}</SheetTitle>
+                  <SheetTitle>{`${process.env.NEXT_BASE_URL}/l/${randomString}`}</SheetTitle>
                   <SheetDescription>
                     Make changes to your profile here.{" "}
                     {"Click save when you're"}
@@ -133,7 +133,7 @@ export default function DashboardComponent() {
                       type="text"
                       onChange={handleChange}
                       name="short_url"
-                      placeholder={`linkshortner.com/l/${randomString}`}
+                      placeholder={`${process.env.NEXT_BASE_URL}/l/${randomString}`}
                       className="col-span-3"
                     />
                   </div>
