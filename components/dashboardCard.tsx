@@ -33,11 +33,13 @@ export default function DashboardCard() {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    // @ts-ignore FIXME
     if (session?.user?.id) {
       const fetchData = async () => {
         console.log("fd36:Fetch DATA");
         try {
           const response = await axios.post(
+            // @ts-ignore FIXME
             `/api/user/${session?.user?.id}/link`
           );
           const responseData = response.data;
@@ -54,9 +56,10 @@ export default function DashboardCard() {
 
       fetchData();
     }
+    // @ts-ignore FIXME
   }, [session?.user?.id]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: any) => {
     console.log("handleDelete", id);
     try {
       await axios.delete(`/api/link/${id}`);

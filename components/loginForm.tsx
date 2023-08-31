@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { EventHandler, useState } from "react";
 import Link from "next/link";
 import { signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ export default function LoginForm() {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,

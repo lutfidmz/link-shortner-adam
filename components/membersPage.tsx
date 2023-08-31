@@ -39,7 +39,7 @@ interface formLinks {
   expired_at: any;
 }
 
-export default function linkDetails() {
+export default function LinkDetails() {
   const [inputsDisabled, setInputsDisabled] = useState(true);
   const [buttonText, setButtonText] = useState("Change");
   const [privatemode, setPrivateMode] = useState(linkData.access === "INVITED");
@@ -150,7 +150,7 @@ export default function linkDetails() {
               {/* <CardTitle>Account</CardTitle> */}
               <CardDescription>
                 Make changes to your link here. Click change to modify your link
-                and confirm when you're done.
+                and confirm when you&apos;re done.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

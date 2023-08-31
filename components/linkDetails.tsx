@@ -39,7 +39,7 @@ interface Links {
   expired_at: any;
 }
 
-export default function linkDetails({ params }: { params: { id: any } }) {
+export default function LinkDetails({ params }: { params: { id: any } }) {
   const [linkData, setLinkData] = useState<Links>({
     id: "",
     title: "",
@@ -168,7 +168,7 @@ export default function linkDetails({ params }: { params: { id: any } }) {
               {/* <CardTitle>Account</CardTitle> */}
               <CardDescription>
                 Make changes to your link here. Click change to modify your link
-                and confirm when you're done.
+                {"and confirm when you're done."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">

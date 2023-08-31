@@ -25,7 +25,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export default function dashboardComponent() {
+export default function DashboardComponent() {
   const [randomString, setRandomString] = useState(generateRandomString());
 
   function generateRandomString() {
@@ -44,7 +44,7 @@ export default function dashboardComponent() {
     short_url: randomString,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -59,6 +59,7 @@ export default function dashboardComponent() {
       const response = await axios.post(`/api/link`, {
         ...formData,
         short_url: "http://localhost:3000/l/" + formData.short_url,
+        // @ts-ignore FIXME
         owner_id: session?.user?.id,
       });
 
@@ -106,7 +107,8 @@ export default function dashboardComponent() {
                 <SheetHeader>
                   <SheetTitle>{`http://www.linkshortner.com/l/${randomString}`}</SheetTitle>
                   <SheetDescription>
-                    Make changes to your profile here. Click save when you're
+                    Make changes to your profile here.{" "}
+                    {"Click save when you're"}
                     done.
                   </SheetDescription>
                 </SheetHeader>
