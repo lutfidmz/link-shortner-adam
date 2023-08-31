@@ -51,6 +51,8 @@ export default function DashboardComponent() {
     }));
   };
 
+  const url = process.env.URL;
+
   const router = useRouter();
   const { data: session, status } = useSession();
   const handleShorten = async () => {
@@ -58,7 +60,7 @@ export default function DashboardComponent() {
     try {
       const response = await axios.post(`/api/link`, {
         ...formData,
-        short_url: process.env.NEXT_BASE_URL + "/l/" + formData.short_url,
+        short_url: "link-adam.vercel.app/l/" + formData.short_url,
         // @ts-ignore FIXME
         owner_id: session?.user?.id,
       });
@@ -96,7 +98,7 @@ export default function DashboardComponent() {
                 type="text"
                 onChange={handleChange}
                 name="long_url"
-                placeholder="http://www.example.com/example"
+                placeholder="http:/link-adam.vercel.app/example"
               />
               <SheetTrigger asChild>
                 <Button variant="secondary" className="w-full mt-3">
@@ -105,7 +107,7 @@ export default function DashboardComponent() {
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>{`${process.env.NEXT_BASE_URL}/l/${randomString}`}</SheetTitle>
+                  <SheetTitle>{`${url}/l/${randomString}`}</SheetTitle>
                   <SheetDescription>
                     Make changes to your profile here.{" "}
                     {"Click save when you're"}
@@ -133,7 +135,7 @@ export default function DashboardComponent() {
                       type="text"
                       onChange={handleChange}
                       name="short_url"
-                      placeholder={`${process.env.NEXT_BASE_URL}/l/${randomString}`}
+                      placeholder={`link-adam.vercel.app/l/${randomString}`}
                       className="col-span-3"
                     />
                   </div>

@@ -10,7 +10,7 @@ export default function Redirect({ params }: { params: { slug: string } }) {
   const [adaPassword, setAdaPassword] = useState(false); // State to track password validity
   const router = useRouter();
 
-  const checkPassword = async () => {
+  const CheckPassword = async () => {
     try {
       const response = await axios.post(`/api/${params.slug}`, {
         pass: password, // Send the password as a query parameter
@@ -30,7 +30,7 @@ export default function Redirect({ params }: { params: { slug: string } }) {
   };
 
   useEffect(() => {
-    checkPassword(); // Call checkPassword when the component mounts
+    CheckPassword(); // Call checkPassword when the component mounts
   }, []); // Empty dependency array ensures this runs once on mount
 
   const handleUnlock = async (event: React.FormEvent) => {
