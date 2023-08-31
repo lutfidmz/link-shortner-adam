@@ -1,13 +1,19 @@
-export async function GET(
+import prisma from '../../../../../lib/prisma';
+import { links } from '@prisma/client';
+import { NextResponse } from 'next/server'
+
+export async function POST(
     request: Request,
-    { params }: { params: { id: string } }) {
-
+    { params }: { params: { id: string } }
+) {
     const id = params.id
-    const getLinks: links | null = await prisma.links.findUnique({
-        where: {
-            id: id,
-        },
-    })
 
-    return NextResponse.json({ getLinks }, { status: 200 });
+
+    const data = await prisma.links.findMany({
+        where: {
+            owner_id: id
+        }
+    });
+
+    return NextResponse.json({ data }, { status: 200 });
 }

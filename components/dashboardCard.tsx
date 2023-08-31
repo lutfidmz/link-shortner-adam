@@ -13,6 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 interface Links {
   id: any;
@@ -25,28 +28,45 @@ interface Links {
 }
 
 export default function DashboardCard() {
+  const router = useRouter();
   const [linkData, setLinkData] = useState([]);
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/api/link`);
-        const responseData = response.data;
+    if (session?.user?.id) {
+      const fetchData = async () => {
+        console.log("fd36:Fetch DATA");
+        try {
+          const response = await axios.post(
+            `/api/user/${session?.user?.id}/link`
+          );
+          const responseData = response.data;
 
-        if (Array.isArray(responseData.data)) {
-          setLinkData(responseData.data);
-        } else {
-          console.error("Link data is not an array:", responseData);
+          if (Array.isArray(responseData.data)) {
+            setLinkData(responseData.data);
+          } else {
+            console.error("Link data is not an array:", responseData);
+          }
+        } catch (error) {
+          console.error("Error fetching link data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching link data:", error);
-      }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }
+  }, [session?.user?.id]);
 
-  return (
+  const handleDelete = async (id) => {
+    console.log("handleDelete", id);
+    try {
+      await axios.delete(`/api/link/${id}`);
+      router.replace("/dashboard");
+    } catch (error) {
+      console.error("Error deleting link data:", error);
+    }
+  };
+
+  return linkData ? (
     <Card className="mt-2">
       <CardHeader>
         <CardTitle>
@@ -100,14 +120,24 @@ export default function DashboardCard() {
                     <Link href={`/links/${link.id}`}>
                       <DropdownMenuItem>Edit</DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem>Delete</DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <a onClick={() => handleDelete(link.id)}>Delete</a>
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
-          ))}{" "}
+          ))}
         </div>
       </CardContent>
     </Card>
+  ) : (
+    <div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
   );
 }

@@ -22,6 +22,9 @@ export async function POST(
         },
     }) as { long_url: string, password: string } | null;
 
+    if (getLinks && getLinks.password === null) {
+        return NextResponse.json({ long_url: getLinks.long_url }, { status: 200 });
+    }
     if (getLinks && getLinks.password === pass) {
         return NextResponse.json({ long_url: getLinks.long_url }, { status: 200 });
     } else {

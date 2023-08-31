@@ -33,8 +33,11 @@ export async function PATCH(
 
     // validasi untuk password
     if (newpassword) {
-        if (oldpassword !== password)
-            return NextResponse.json({ message: "Password invalid" }, { status: 422 }) //422 unprocessed request
+        if (password !== null) {
+            if ((oldpassword !== password)) {
+                return NextResponse.json({ message: "Password invalid" }, { status: 422 }) //422 unprocessed request
+            }
+        }
         await prisma.links.update({
             where: {
                 id: id,

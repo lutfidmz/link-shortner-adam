@@ -1,50 +1,37 @@
-import prisma from '../../../lib/prisma';
-import { NextApiRequest, NextApiResponse } from 'next';
+import prisma from "../../../lib/prisma";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'GET') {
-        const { name, email } = req.query;
-    
-        let users;
-    
-        if (name || email) {
-          users = await prisma.users.findMany({
-            where: {
-              name: name ? { contains: name as string } : undefined,
-              email: email ? { contains: email as string } : undefined,
-            },
-          });
-        } else {
-          users = await prisma.users.findMany();
-        }
-    
-        res.status(200).json(users);
-  } else if (req.method === 'POST') {
-    const { name, email, password } = req.body;
-    const newUser = await prisma.users.create({
-      data: {
-        name,
-        email,
-        password,
-      },
-    });
-    res.status(201).json(newUser);
-  } else if (req.method === 'PUT') {
-    const { id, name, email, password } = req.body;
-    const updatedUser = await prisma.users.update({
-      where: { id },
-      data: {
-        name,
-        email,
-        password,
-      },
-    });
-    res.status(200).json(updatedUser);
-  } else if (req.method === 'DELETE') {
-    const { id } = req.body;
-    await prisma.users.delete({ where: { id } });
-    res.status(204).end(); // No content
-  } else {
-    res.status(405).end(); // Method not allowed
+import { NextResponse } from "next/server";
+
+export async function GET(request: Request) {
+  const data = await prisma.users.findMany({
+  })
+  return NextResponse.json({ data }, { status: 200 });
+}
+
+export async function POST(request: Request) {
+  const {
+    name,
+    email,
+    password,
+  } = await request.json();
+
+  const checkUrl = await prisma.users.findFirst({
+    where: {
+      email: email as string
+    }
+  });
+
+  if (checkUrl) {
+    return NextResponse.json({ error: "Email Has Been Used" }, { status: 404 });
   }
+
+  const newUser = await prisma.users.create({
+    data: {
+      name,
+      email,
+      password,
+    },
+  });
+
+  return NextResponse.json({ newUser }, { status: 201 });
 }

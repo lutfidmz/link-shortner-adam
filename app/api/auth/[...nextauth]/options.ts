@@ -68,5 +68,9 @@ export const options: NextAuthOptions = {
             }
             return token
         }
+    },
+    pages: {
+        signIn: '/login',
+        error: '/dashboard', // Error code passed in query string as ?error=
     }
 }

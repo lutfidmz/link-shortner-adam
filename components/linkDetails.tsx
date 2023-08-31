@@ -235,7 +235,7 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                 />
               </div>
 
-              <div className="hidden md:flex items-center justify-between space-x-2">
+              {/* <div className="hidden md:flex items-center justify-between space-x-2">
                 <Label htmlFor="private-mode">Only Invited</Label>
                 <Switch
                   id="private-mode"
@@ -246,7 +246,7 @@ export default function linkDetails({ params }: { params: { id: any } }) {
                   }}
                   disabled={inputsDisabled}
                 />
-              </div>
+              </div> */}
               <div className="space-y-1 hidden md:block">
                 <Label htmlFor="current">Current password</Label>
                 <Input
